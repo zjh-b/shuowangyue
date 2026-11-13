@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { firstRuleEvidence } from '../src/game/hints';
 import { recordJudgment, type Judgment } from '../src/game/judgments';
-import { playtestRecord } from '../src/game/playtest';
+import { playtestRecord, playtestSummary } from '../src/game/playtest';
 import { applySessionEvent, createSession, encodeSession, restoreSession } from '../src/game/session';
 import { simulateMatch, STRATEGIES } from '../src/game/simulation';
 import { playerView } from '../src/game/views';
@@ -65,5 +65,30 @@ describe('试玩复盘', () => {
     expect(folded.every(hand => hand.cards[1][1] === null)).toBe(true);
     expect(record).not.toHaveProperty('seed');
     expect(JSON.stringify(record)).not.toContain('私人内容');
+  });
+
+  it('反馈摘要可在牌局中查看，并只在终局包含本场法则和净收益', () => {
+    let session = { ...createSession(28, 'large'), note: '私人内容' };
+    session = applySessionEvent(session, { type: 'start' });
+    session = applySessionEvent(session, { type: 'hint', step: 0 });
+    session = recordJudgment(session, 'near');
+
+    const summary = playtestSummary(session);
+    expect(summary).toMatchObject({
+      '对局进度': '第1手进行中',
+      '已用提示': 1,
+      '首次判断': '近数局 · 第1手行动时',
+    });
+    expect(summary).not.toHaveProperty('本场法则');
+    expect(summary).not.toHaveProperty('终局净收益');
+    expect(JSON.stringify(summary)).not.toContain('私人内容');
+    expect(Object.values(summary).every(value => typeof value === 'string' || typeof value === 'number')).toBe(true);
+
+    const match = simulateMatch(28, 'large', 'evidence');
+    expect(playtestSummary({ ...session, match })).toMatchObject({
+      '对局进度': '八手已完成',
+      '本场法则': '大数局',
+      '终局净收益': match.banks[0] - 32,
+    });
   });
 });

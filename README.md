@@ -22,6 +22,16 @@
 
 在「笔记」选择一套法则并点「记录判断」。终局可以回看首次和最后判断、当时已用的提示，以及最早能区分候选法则的摊牌或验牌。下载的试玩记录包含玩家可见的牌面、行动和判断，私人笔记留在本地。[试玩基线与真人记录表](docs/试玩基线-v0.3.md)。
 
+## 试玩反馈
+
+牌局中点页首「反馈」，或在终局点「留下试玩反馈」。玩家可以只提交卡点与留言，也可以预览并勾选对局摘要。摘要包含进度、提示次数、判断时点、挑战和换牌手次，终局时另含法则和净收益。摘要省略完整牌序、未公开暗牌、私人笔记和浏览器标识。在线提交只在玩家点击「提交反馈」时发生。
+
+1. 在自己管理的 Formspree 账号创建表单，并复制 Integration 页的表单 ID。 [创建表单](https://help.formspree.io/articles/building-your-form/building-an-html-form)
+2. 在 GitHub 仓库「Settings → Secrets and variables → Actions → Variables」新建仓库变量 `VITE_FEEDBACK_FORM_ID`，值为表单地址 `https://formspree.io/f/…` 最后一段的公开 ID。
+3. 手动运行「Publish GitHub Pages」工作流。用正式网址提交一条测试反馈，到 Formspree 的「Submissions」核对。
+
+本机可把同名变量写入 `.env.local`，重启开发服务器试用。未配置接收表单时，页面提供「下载反馈」供玩家手动转交。单文件离线版也使用这个入口。
+
 ## 本地开发
 
 ```powershell

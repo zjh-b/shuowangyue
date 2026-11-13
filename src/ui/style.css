@@ -551,6 +551,7 @@ summary::marker { color: var(--gold); }
 .playtest-review small { display: block; }
 .playtest-review dd > .text-button { min-height: 0; padding: 0; }
 .export-playtest { margin-top: 5px; }
+.final-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
 .share-dialog { width: min(480px, calc(100% - 24px)); }
 .share-link-label { display: block; margin-block: 12px 4px; color: var(--muted); font-size: 13px; }
@@ -564,6 +565,51 @@ summary::marker { color: var(--gold); }
   color: var(--paper);
 }
 .share-status:not(:empty) { color: var(--gold-light); font-size: 13px; margin-top: 6px; }
+
+.feedback-dialog { width: min(500px, calc(100% - 24px)); }
+.feedback-dialog[open] { display: block; }
+.feedback-dialog form {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  max-height: calc(100dvh - 26px);
+}
+.feedback-fields { display: grid; gap: 14px; }
+.feedback-fields a { color: var(--gold-light); }
+.feedback-field { display: grid; gap: 5px; }
+.feedback-field select, .feedback-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--panel-top);
+  color: var(--paper);
+  font: inherit;
+}
+.feedback-field textarea { resize: vertical; }
+.feedback-field textarea::placeholder { color: var(--muted); opacity: 1; }
+.feedback-attachment { border-top: 1px solid var(--line); }
+.feedback-consent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.feedback-consent input { margin: 0; accent-color: var(--gold); }
+.feedback-attachment summary { color: var(--gold-light); font-size: 13px; }
+.feedback-attachment dl { font-size: 13px; }
+.feedback-attachment dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-block: 5px;
+}
+.feedback-attachment dt { color: var(--muted); }
+.feedback-attachment dd { text-align: right; }
+.feedback-footer p { flex: 1 1 140px; }
+.feedback-footer p:empty { display: none; }
 
 @media (max-width: 1080px) {
   .app-shell { padding-inline: 24px; }

@@ -2,18 +2,13 @@ import { useState } from 'react';
 import { compatibleRules } from '../game/clues';
 import { candidateResults } from '../game/hints';
 import type { Judgment, Judgments } from '../game/judgments';
-import { playtestRecord, playtestReview } from '../game/playtest';
+import { judgmentTiming, playtestRecord, playtestReview } from '../game/playtest';
 import { RULE_NAMES, RULES, type Rule } from '../game/rules';
 import type { Session } from '../game/session';
 import { outcome } from './gameCopy';
 
-function timing(judgment: Judgment) {
-  if (judgment.phase === 'intro') return '开局前';
-  return `第${judgment.hand + 1}手${judgment.phase === 'settled' ? '结算后' : '行动时'}`;
-}
-
 function JudgmentLine({ judgment }: { judgment: Judgment }) {
-  return <>{RULE_NAMES[judgment.rule]}<small>{timing(judgment)} · 已用提示 {judgment.hintsUsed} 次</small></>;
+  return <>{RULE_NAMES[judgment.rule]}<small>{judgmentTiming(judgment)} · 已用提示 {judgment.hintsUsed} 次</small></>;
 }
 
 export function JudgmentForm({ judgments, finished, onSave }: {
@@ -32,7 +27,7 @@ export function JudgmentForm({ judgments, finished, onSave }: {
       </div>
     </form>}
     <p className="muted" aria-live="polite">{judgments
-      ? `已记录 ${RULE_NAMES[judgments.latest.rule]} · ${timing(judgments.latest)} · 已用提示 ${judgments.latest.hintsUsed} 次`
+      ? `已记录 ${RULE_NAMES[judgments.latest.rule]} · ${judgmentTiming(judgments.latest)} · 已用提示 ${judgments.latest.hintsUsed} 次`
       : finished ? '本场没有记录判断。' : '有把握时记下一次判断，局后可回看你何时选定规则。'}</p>
   </section>;
 }

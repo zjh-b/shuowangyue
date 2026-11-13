@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { card } from '../game/cards';
 import { HINT_COUNT } from '../game/hints';
+import { playtestSummary } from '../game/playtest';
 import { RULE_NAMES, RULES } from '../game/rules';
 import { NOTE_LIMIT } from '../game/session';
 import { playerView } from '../game/views';
@@ -9,6 +10,7 @@ import { MatchTable } from './MatchTable';
 import { MusicToggle } from './MusicToggle';
 import { Onboarding } from './Onboarding';
 import { PlayingCard } from './PlayingCard';
+import { PlaytestFeedback } from './PlaytestFeedback';
 import { JudgmentForm, PlaytestReview } from './PlaytestReview';
 import { History, RuleBook } from './Records';
 import { ShareGame } from './ShareGame';
@@ -28,6 +30,7 @@ export function App() {
   const [tab, setTab] = useState<Tab>(finished ? 'history' : 'clue');
   const [guide, setGuide] = useState<'enter' | 'review' | null>(null);
   const guideTrigger = useRef<HTMLElement | null>(null);
+  const [feedbackSummary, setFeedbackSummary] = useState<ReturnType<typeof playtestSummary> | null>(null);
   const view = playerView(match);
   const net = match.banks[0] - 32;
   const last = match.history.at(-1);
@@ -92,6 +95,10 @@ export function App() {
     });
   }
 
+  function openFeedback() {
+    setFeedbackSummary(playtestSummary(session));
+  }
+
   return <div className="app-shell">
     <header className="site-header">
       <div className="wordmark">朔望月</div>
@@ -99,6 +106,7 @@ export function App() {
         <span className="build-label">试玩版 v{__GAME_VERSION__}</span>
         <MusicToggle showdown={showdown} />
         <ShareGame />
+        <button className="text-button" onClick={openFeedback}>反馈</button>
         {!intro && !finished && <button className="text-button" onClick={restartMatch}>重新开局</button>}
       </div>
     </header>
@@ -124,7 +132,10 @@ export function App() {
             <p>本场法则</p><h2>{RULE_NAMES[match.rule]}</h2><p>{RULE_COPY[match.rule]}</p>
           </div>
           <PlaytestReview session={session} onEvidence={openEvidence} />
-          <button className="primary" onClick={restartMatch}>再来一场</button>
+          <div className="final-actions">
+            <button className="primary" onClick={restartMatch}>再来一场</button>
+            <button className="secondary" onClick={openFeedback}>留下试玩反馈</button>
+          </div>
         </section> : <MatchTable match={match} view={view} hintsLeft={HINT_COUNT - hints.used}
           onClue={() => openClues()} onAdvance={advance} dispatch={dispatch} />}
         {!canSave && <p className="save-status">此浏览器无法保存进度，关闭或刷新页面前请先完成本场。</p>}
@@ -157,6 +168,7 @@ export function App() {
         </div>
       </aside>
     </main>
+    <PlaytestFeedback key={match.seed} summary={feedbackSummary} onClose={() => setFeedbackSummary(null)} />
     {guide && <Onboarding entering={guide === 'enter'} onClose={closeGuide} onEnter={enterMatch} />}
   </div>;
 }
