@@ -69,6 +69,7 @@ it('后半场每座仅能在首次行动时私下换一次，牌不重复', () =
   const old = table.cards[0][1];
   table = swapRoomCard(table, 0)!;
   expect(table.cards[0][1]).not.toEqual(old);
+  expect(roomTableView(table, 0).discarded).toEqual(old);
   expect(roomTableView(table, 1)).toEqual(before);
   expect(swapRoomCard(table, 0)).toBeNull();
   table = roomMove(table, 0, 'check')!;

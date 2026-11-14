@@ -23,14 +23,18 @@ export function scoreCards(cards: Card[]): Score {
 
 export function compareHands(rule: Rule, publicCard: Card, player: Card[], dealer: Card[]): Comparison {
   const scores: [Score, Score] = [scoreCards([publicCard, ...player]), scoreCards([publicCard, ...dealer])];
+  return { ...compareScores(rule, scores[0], scores[1]), scores };
+}
+
+export function compareScores(rule: Rule, left: Score, right: Score): Pick<Comparison, 'winner' | 'criterion'> {
   const fields: [keyof Score, string, number][] = rule === 'large'
     ? [['sum', '总点数', 1], ['straight', '顺子长度', 1]]
     : rule === 'near'
       ? [['distance', '距24的距离', -1], ['straight', '顺子长度', 1]]
       : [['repeats', '重复次数', 1], ['repeatedDigit', '重复数字', 1], ['sum', '总点数', 1], ['straight', '顺子长度', 1]];
   for (const [field, label, direction] of fields) {
-    const difference = ((scores[0][field] as number) - (scores[1][field] as number)) * direction;
-    if (difference) return { winner: difference > 0 ? 0 : 1, scores, criterion: label };
+    const difference = ((left[field] as number) - (right[field] as number)) * direction;
+    if (difference) return { winner: difference > 0 ? 0 : 1, criterion: label };
   }
-  return { winner: null, scores, criterion: '所有指标相同' };
+  return { winner: null, criterion: '所有指标相同' };
 }

@@ -51,6 +51,18 @@ for (const count of [2, 4] as const) {
         await expect(openHands(page).getByText('盖着', { exact: true })).toHaveCount(count - 1);
         expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width);
       }
+      await expect(host).toHaveTitle('轮到你了 · 朔望月');
+      const privateCommands: string[] = [];
+      host.on('request', request => {
+        if (request.method() === 'POST') privateCommands.push(request.url());
+      });
+      await host.getByText('按我的判断看本手', { exact: true }).click();
+      const guide = host.getByRole('region', { name: '本手估牌' });
+      await guide.getByRole('combobox', { name: '估牌法则' }).selectOption('near');
+      await expect(guide.getByLabel('整桌牌力估算')).toContainText('并列第一');
+      await expect(guide.getByText(/距24差/)).toBeVisible();
+      expect(privateCommands).toEqual([]);
+      await host.getByText('按我的判断看本手', { exact: true }).click();
       const capture = process.env.SHUOWANG_CAPTURE;
       if (capture && count === 4) {
         await host.screenshot({ path: resolve(capture, 'desktop.png'), animations: 'disabled' });
@@ -87,6 +99,9 @@ for (const count of [2, 4] as const) {
           const swapped = await own.getAttribute('aria-label');
           await host.reload();
           await expect(own).toHaveAttribute('aria-label', swapped!);
+          await host.getByText('按我的判断看本手', { exact: true }).click();
+          await expect(guide.getByRole('combobox', { name: '估牌法则' })).toHaveValue('near');
+          await host.getByText('按我的判断看本手', { exact: true }).click();
           await expect(host.getByRole('button', { name: /秘密换暗牌/ })).toHaveCount(0);
           await expect(openHands(guests[0]).getByText('盖着', { exact: true })).toHaveCount(count - 1);
         }

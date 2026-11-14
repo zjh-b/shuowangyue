@@ -712,8 +712,8 @@ summary::marker { color: var(--gold); }
   :root { --card-width: 82px; --card-height: 101px; }
   .app-shell { padding-inline: 10px; }
   .header-right { font-size: 11px; gap: 4px; }
-  .header-right .text-button { font-size: 12px; }
-  .site-header { min-height: 56px; }
+  .header-right .text-button { font-size: 12px; white-space: nowrap; }
+  .site-header { min-height: 56px; gap: 8px; }
   .table-band { padding-block: 3px; }
   .card-slot-small { --card-width: 81px; --card-height: 101px; }
   .card-bottom { padding-inline: 0; }

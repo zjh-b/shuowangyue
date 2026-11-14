@@ -3,10 +3,11 @@ import { digitsOf, type Card } from '../game/cards';
 import { compatibleRules } from '../game/clues';
 import type { RoomCommand, RoomView } from '../game/roomProtocol';
 import { ROOM_BANK, ROOM_HANDS, roomWinners, type RoomHandRecord, type RoomMove } from '../game/roomTable';
-import { RULE_NAMES, RULES } from '../game/rules';
+import { RULE_NAMES, RULES, type Rule } from '../game/rules';
 import { OpeningExample, RuleComparison } from './CluePanel';
 import { ACTION_NAMES, RULE_COPY } from './gameCopy';
 import { PlayingCard } from './PlayingCard';
+import { HandGuide } from './HandGuide';
 
 type Table = NonNullable<RoomView['table']>;
 type TableProps = { room: RoomView; table: Table };
@@ -62,6 +63,19 @@ export function RoomTable({ room, table, deadline, busy, play }: TableProps & {
   const myTurn = table.turn === room.seat;
   const settled = table.phase === 'settled' ? table.history.at(-1) : undefined;
   const hand = table.hand + 1;
+  const firstHand = table.history[0] ?? table;
+  const guessKey = ['shuowangyue.guide', room.code, firstHand.publicCard.id, ...firstHand.cards.map(pair => pair[0].id)].join('.');
+  const [judgment, setJudgment] = useState<Rule | null>(() => {
+    try { return RULES.find(rule => rule === localStorage.getItem(guessKey)) ?? null; }
+    catch { return null; }
+  });
+
+  function chooseRule(rule: Rule) {
+    setJudgment(rule);
+    try { localStorage.setItem(guessKey, rule); }
+    catch { /* The choice remains available while this page is open. */ }
+  }
+
   return <section className="room-table" aria-label="联机牌桌">
     <div className="table-heading">
       <div className="table-round">
@@ -114,6 +128,12 @@ export function RoomTable({ room, table, deadline, busy, play }: TableProps & {
         </div> : table.swapUsed && <p className="muted">本场换牌机会已用。</p>}
       </>}
     </div>
+    {table.phase === 'playing' && !table.folded[room.seat] && <HandGuide
+      publicCard={table.publicCard} mine={[mine[0], mine[1]!]}
+      opponents={table.cards.flatMap(([upcard], seat) => seat === room.seat ? [] : [{ upcard, active: !table.folded[seat] }])}
+      discarded={table.discarded} rule={judgment} onRuleChange={chooseRule} pot={table.pot}
+      callCost={table.actions.find(action => action.kind === 'call')?.cost ?? 0}
+      canAct={myTurn} canSwap={table.canSwap} />}
   </section>;
 }
 

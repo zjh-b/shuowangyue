@@ -13,6 +13,7 @@ export function RuleBook({ onGuide }: { onGuide: (trigger: HTMLButtonElement) =>
     <section><h3>地猴的透视与挑战</h3><p>地猴知道法则，也看得见你的底牌。每半场你有一次挑战，可随开注或加注声明，迫使它跟注后立即摊牌。额度在第5手重置。</p></section>
     <section><h3>秘密换暗牌</h3><p>第5–8手，在轮到你进行当手第一次行动时，可以从未发牌中随机换一张暗牌。每场一次，可接着挑战。地猴继续按原暗牌下注，结算与验牌用新暗牌。</p></section>
     <section><h3>八手与筹码</h3><p>每人32道，每手各付1道底注。前四手每次加1道，后四手每次加2道。每手最多加注一次。打完八手，多于32道为胜，等于32道为和。</p></section>
+    <section><h3>按自己的判断估牌</h3><p>出牌区下方可展开「按我的判断看本手」。选择你推测的法则后，可查看牌力、跟注门槛及换牌可能带来的变化。估算按可见牌和未见暗牌等可能计算，也可切换法则比较。单人模式下的选择会记入笔记。</p></section>
     <details>
       <summary>查看36张固定牌表</summary>
       <div className="deck-list">{CARDS.map(card => <div key={card.id}><b>{card.name}</b><span>{dateOf(card)}</span><span>{digitsOf(card).join(' · ')}</span></div>)}</div>

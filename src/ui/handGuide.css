@@ -1,0 +1,51 @@
+.hand-guide {
+  margin-top: 9px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-top);
+}
+.hand-guide > summary {
+  min-height: 44px;
+  padding: 9px 13px;
+  color: var(--gold-light);
+  font-size: 13px;
+}
+.guide-selected-rule { margin-inline-start: 12px; color: var(--muted); }
+.hand-guide-body { padding: 2px 13px 12px; font-size: 13px; }
+.guide-rule { display: flex; flex-wrap: wrap; align-items: center; gap: 7px 12px; }
+.guide-rule select {
+  min-width: 0;
+  min-height: 44px;
+  flex: 1;
+  max-width: 270px;
+  padding: 8px;
+  font: inherit;
+  color: var(--paper);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+.guide-score { margin-top: 9px; }
+.guide-score b, .guide-equity strong, .guide-cost b, .guide-swap b { color: var(--gold-light); }
+.guide-outcomes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px 24px;
+  margin-block: 9px;
+  padding-block: 7px;
+  border-block: 1px solid var(--line);
+}
+.guide-outcomes div { display: flex; gap: 9px; }
+.guide-outcomes dt { color: var(--muted); }
+.guide-outcomes dd { font-variant-numeric: tabular-nums; }
+.guide-cost, .guide-method { margin-top: 6px; }
+.guide-swap { margin-top: 9px; padding-top: 8px; border-top: 1px solid var(--line); }
+.guide-swap .muted { margin-top: 3px; }
+.guide-method { max-width: 72ch; }
+
+@media (max-width: 540px) {
+  .hand-guide > summary { padding-inline: 10px; }
+  .hand-guide-body { padding-inline: 10px; }
+  .guide-outcomes { gap: 6px 14px; }
+  .guide-outcomes div { gap: 6px; }
+}

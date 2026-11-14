@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { isRoomCode, normalizeRoomCode, ROOM_CODE_LENGTH, ROOM_NAME_LENGTH, type RoomView } from '../game/roomProtocol';
 import type { SeatCount } from '../game/roomTable';
 import { RULE_NAMES } from '../game/rules';
@@ -119,6 +119,11 @@ export function OnlineRooms() {
   const [feedback, setFeedback] = useState<Record<string, string | number> | null>(null);
   const finished = table?.phase === 'finished';
   const waiting = online.ticket && !room;
+  const myTurn = table?.phase === 'playing' && table.turn === room?.seat;
+  useEffect(() => {
+    document.title = myTurn ? '轮到你了 · 朔望月' : '朔望月 · 八手之间';
+    return () => { document.title = '朔望月 · 八手之间'; };
+  }, [myTurn]);
   const openFeedback = () => setFeedback({
     '游戏模式': room ? `${room.size} 人联机` : '联机大厅',
     '对局进度': table ? finished ? '八手已完成' : `第${table.hand + 1}手` : '尚未开局',
@@ -131,7 +136,7 @@ export function OnlineRooms() {
       <div className="wordmark">朔望月</div>
       <div className="header-right">
         <span className="build-label">试玩版 v{__GAME_VERSION__}</span>
-        <MusicToggle />
+        <MusicToggle playerTurn={myTurn} />
         <button className="text-button" onClick={openFeedback}>反馈</button>
         <a className="text-button" href={soloAddress()}>单人牌局</a>
       </div>

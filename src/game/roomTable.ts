@@ -34,6 +34,7 @@ export type RoomTable = {
   invested: number[];
   folded: boolean[];
   swapUsed: boolean[];
+  discarded?: (Card | null)[];
   pot: number;
   raised: boolean;
   pending: number[];
@@ -56,6 +57,7 @@ function deal(size: SeatCount, hand: number, banks: number[], random: () => numb
     banks: banks.map(chips => chips - 1),
     invested: Array<number>(size).fill(1),
     folded: Array<boolean>(size).fill(false),
+    discarded: Array<Card | null>(size).fill(null),
     pot: size,
     raised: false,
     pending: seatOrder(size, first),
@@ -101,7 +103,9 @@ export function swapRoomCard(table: RoomTable, seat: number): RoomTable | null {
   if (!canSwap(table, seat)) return null;
   const [replacement, ...undealt] = table.undealt;
   const cards = table.cards.map((pair, index): Pair => index === seat ? [pair[0], replacement] : pair);
-  return { ...table, cards, undealt, swapUsed: table.swapUsed.map((used, index) => used || index === seat) };
+  const discarded = (table.discarded ?? Array<Card | null>(table.size).fill(null))
+    .map((value, index) => index === seat ? table.cards[seat][1] : value);
+  return { ...table, cards, undealt, discarded, swapUsed: table.swapUsed.map((used, index) => used || index === seat) };
 }
 
 export function roomWinners(rule: Rule, publicCard: Card, players: { seat: number; cards: Pair }[]): number[] {
@@ -163,6 +167,7 @@ export function roomTableView(table: RoomTable, seat: number) {
     banks: table.banks, invested: table.invested, folded: table.folded,
     pot: table.pot, turn: table.turn, unit: unit(table), lastMove: table.moves.at(-1) ?? null,
     actions: roomActions(table, seat), canSwap: canSwap(table, seat), swapUsed: table.swapUsed[seat],
+    discarded: table.discarded?.[seat] ?? null,
     history: table.history,
     rule: table.phase === 'finished' ? table.rule : null,
   };

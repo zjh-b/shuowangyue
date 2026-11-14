@@ -46,9 +46,13 @@ export function useOnlineRoom() {
     const saved = ticket;
     const abort = new AbortController();
     let timer = 0;
+    let polling = false;
     async function poll() {
-      if (abort.signal.aborted) return;
+      if (abort.signal.aborted || polling) return;
+      window.clearTimeout(timer);
+      polling = true;
       const version = requestVersion.current;
+      let expired = false;
       try {
         if (!inFlight.current) {
           const view = await getOnlineRoom(saved, abort.signal);
@@ -65,14 +69,27 @@ export function useOnlineRoom() {
           setTicket(null);
           setRoom(null);
           setError(failureText(error));
+          expired = true;
           return;
         }
         if (status !== 409) setReconnecting(true);
+      } finally {
+        polling = false;
+        if (!abort.signal.aborted && !expired) timer = window.setTimeout(poll, document.hidden ? 5000 : 1100);
       }
-      if (!abort.signal.aborted) timer = window.setTimeout(poll, document.hidden ? 5000 : 1100);
+    }
+    function wake() {
+      if (!document.hidden) void poll();
     }
     void poll();
-    return () => { abort.abort(); window.clearTimeout(timer); };
+    document.addEventListener('visibilitychange', wake);
+    window.addEventListener('online', wake);
+    return () => {
+      abort.abort();
+      window.clearTimeout(timer);
+      document.removeEventListener('visibilitychange', wake);
+      window.removeEventListener('online', wake);
+    };
   }, [ticket]);
 
   async function mutate(operation: () => Promise<void>) {

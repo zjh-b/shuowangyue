@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { compatibleRules } from '../game/clues';
 import { candidateResults } from '../game/hints';
 import type { Judgment, Judgments } from '../game/judgments';
@@ -15,6 +15,7 @@ export function JudgmentForm({ judgments, finished, onSave }: {
   judgments: Judgments | null; finished: boolean; onSave: (rule: Rule) => void;
 }) {
   const [choice, setChoice] = useState<Rule | ''>(judgments?.latest.rule ?? '');
+  useEffect(() => { setChoice(judgments?.latest.rule ?? ''); }, [judgments?.latest.rule]);
   return <section className="judgment-form" aria-label="记录当前判断">
     {!finished && <form onSubmit={event => { event.preventDefault(); if (choice) onSave(choice); }}>
       <label htmlFor="judgment">当前判断</label>

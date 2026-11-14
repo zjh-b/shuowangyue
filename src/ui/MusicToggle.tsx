@@ -5,17 +5,20 @@ import turnUrl from '../audio/card-turn.mp3';
 
 const MUSIC_LEVEL = 0.22;
 
-export function MusicToggle({ showdown }: { showdown?: RecordEntry }) {
+export function MusicToggle({ showdown, playerTurn = false }: { showdown?: RecordEntry; playerTurn?: boolean }) {
   const music = useRef<HTMLAudioElement>(null);
   const turn = useRef<HTMLAudioElement>(null);
   const previousShowdown = useRef(showdown);
+  const previousTurn = useRef(playerTurn);
   const [on, setOn] = useState(false);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const isNewShowdown = showdown && showdown !== previousShowdown.current;
+    const isNewTurn = playerTurn && !previousTurn.current;
     previousShowdown.current = showdown;
-    if (!isNewShowdown || !on || music.current?.paused) return;
+    previousTurn.current = playerTurn;
+    if ((!isNewShowdown && !isNewTurn) || !on || music.current?.paused) return;
     const background = music.current!;
     const effect = turn.current!;
     background.volume = 0.08;
@@ -27,7 +30,7 @@ export function MusicToggle({ showdown }: { showdown?: RecordEntry }) {
       window.clearTimeout(restore);
       background.volume = MUSIC_LEVEL;
     };
-  }, [showdown, on]);
+  }, [showdown, playerTurn, on]);
 
   function toggle() {
     const audio = music.current!;

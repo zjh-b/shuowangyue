@@ -105,7 +105,7 @@ export function App() {
       <div className="wordmark">朔望月</div>
       <div className="header-right">
         <span className="build-label">试玩版 v{__GAME_VERSION__}</span>
-        <MusicToggle showdown={showdown} />
+        <MusicToggle showdown={showdown} playerTurn={match.phase === 'playing' && match.turn === 0} />
         <ShareGame />
         <button className="text-button" onClick={openFeedback}>反馈</button>
         {!intro && !finished && <button className="text-button" onClick={restartMatch}>重新开局</button>}
@@ -140,7 +140,8 @@ export function App() {
             <button className="secondary" onClick={openFeedback}>留下试玩反馈</button>
           </div>
         </section> : <MatchTable match={match} view={view} hintsLeft={HINT_COUNT - hints.used}
-          onClue={() => openClues()} onAdvance={advance} dispatch={dispatch} />}
+          onClue={() => openClues()} onAdvance={advance} dispatch={dispatch}
+          judgment={session.judgments?.latest.rule ?? null} onJudgment={saveJudgment} />}
         {!canSave && <p className="save-status">此浏览器无法保存进度，关闭或刷新页面前请先完成本场。</p>}
         {!intro && <a className="text-button room-open-after-start" href={roomAddress()}
           target={offlineRoomBuild ? '_blank' : undefined} rel={offlineRoomBuild ? 'noopener' : undefined}>双人 / 四人联机</a>}

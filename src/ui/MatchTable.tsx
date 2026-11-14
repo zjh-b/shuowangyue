@@ -4,8 +4,10 @@ import { canSwapHole, legalActions, unit, type ActionKind, type Match } from '..
 import { firstRuleEvidence, HINT_COUNT } from '../game/hints';
 import type { SessionEvent } from '../game/session';
 import type { playerView } from '../game/views';
+import type { Rule } from '../game/rules';
 import { ACTION_NAMES, moveText, outcome } from './gameCopy';
 import { HandResult } from './HandResult';
+import { HandGuide } from './HandGuide';
 import { PlayingCard } from './PlayingCard';
 
 type Props = {
@@ -15,9 +17,11 @@ type Props = {
   onClue: () => void;
   onAdvance: () => void;
   dispatch: (event: SessionEvent) => void;
+  judgment: Rule | null;
+  onJudgment: (rule: Rule) => void;
 };
 
-export function MatchTable({ match, view, hintsLeft, onClue, onAdvance, dispatch }: Props) {
+export function MatchTable({ match, view, hintsLeft, onClue, onAdvance, dispatch, judgment, onJudgment }: Props) {
   const choices = match.turn === 0 ? legalActions(match) : [];
   const challenges = choices.filter(action => action.challengeAllowed);
   const last = view.history.at(-1);
@@ -130,5 +134,15 @@ export function MatchTable({ match, view, hintsLeft, onClue, onAdvance, dispatch
           <p className="inspection-result">验牌 · 假想摊牌{outcome(last.inspectionVerdict)}。筹码仍按弃牌结算。</p>}
       </>}
     </div>
+    {match.phase === 'playing' && <HandGuide publicCard={view.publicCard} mine={view.cards[0]}
+      opponents={[{ upcard: view.cards[1][0], active: true }]}
+      discarded={swap ? match.deals[match.hand].cards[0][1] : null}
+      rule={judgment} onRuleChange={onJudgment} pot={match.pot}
+      callCost={choices.find(choice => choice.kind === 'call')?.cost ?? 0}
+      canAct={awaitingPlayer} canSwap={swapAvailable}
+      challenge={challenges[0] && {
+        cost: challenges[0].cost,
+        finalPot: match.pot + 2 * challenges[0].cost + match.invested[0] - match.invested[1],
+      }} />}
   </section>;
 }
