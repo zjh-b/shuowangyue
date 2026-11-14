@@ -15,6 +15,7 @@ import { JudgmentForm, PlaytestReview } from './PlaytestReview';
 import { History, RuleBook } from './Records';
 import { ShareGame } from './ShareGame';
 import { RULE_COPY } from './gameCopy';
+import { offlineRoomBuild, roomAddress } from './roomClient';
 import { useGameSession } from './useGameSession';
 
 const TABS = { clue: '线索与提示', rules: '规则册', history: '记录', notes: '笔记' } as const;
@@ -122,6 +123,8 @@ export function App() {
             <h1>八手之间，<br />看透牌局。</h1>
             <p className="intro-copy">从节气与节日的牌面推断本场法则，再和能透视底牌的地猴过招。</p>
             <button className="primary start-button" onClick={event => openGuide('enter', event.currentTarget)}>入局 <span>32道起手</span></button>
+            <a className="secondary room-launch" href={roomAddress()}
+              target={offlineRoomBuild ? '_blank' : undefined} rel={offlineRoomBuild ? 'noopener' : undefined}>联机对局</a>
             <button className="text-button mobile-clue" onClick={() => openClues('clue-heading')}>先看开局线索</button>
           </div>
         </section> : finished ? <section className="final-panel">
@@ -139,6 +142,8 @@ export function App() {
         </section> : <MatchTable match={match} view={view} hintsLeft={HINT_COUNT - hints.used}
           onClue={() => openClues()} onAdvance={advance} dispatch={dispatch} />}
         {!canSave && <p className="save-status">此浏览器无法保存进度，关闭或刷新页面前请先完成本场。</p>}
+        {!intro && <a className="text-button room-open-after-start" href={roomAddress()}
+          target={offlineRoomBuild ? '_blank' : undefined} rel={offlineRoomBuild ? 'noopener' : undefined}>双人 / 四人联机</a>}
       </div>
 
       <aside className="sidebar" id="table-evidence" aria-label="线索与记录">

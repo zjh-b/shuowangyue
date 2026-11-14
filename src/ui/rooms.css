@@ -1,0 +1,150 @@
+.room-launch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-inline-start: 9px;
+  vertical-align: top;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.room-open-after-start { display: inline-flex; align-items: center; margin-top: 8px; }
+.room-shell a.text-button { display: inline-flex; align-items: center; }
+.room-shell :is(.primary, .secondary, .challenge-button, .text-button):disabled {
+  cursor: default;
+  background: var(--panel);
+  color: var(--muted);
+  border-color: var(--line);
+  box-shadow: none;
+}
+
+.room-entry {
+  padding: clamp(21px, 4vw, 48px);
+  border: 1px solid var(--brass-line);
+  border-radius: 10px;
+  background: linear-gradient(100deg, #101e29f4, #101e29c7), var(--tablecloth) center / cover;
+  box-shadow: 0 12px 38px #070f1570;
+}
+.room-entry h1 { color: var(--gold-light); font-size: clamp(29px, 4vw, 45px); line-height: 1.2; }
+.room-intro-copy { color: var(--muted); margin-block: 9px 22px; }
+.room-entry-tabs { display: flex; gap: 8px; margin-bottom: 19px; }
+.room-entry-tabs [aria-pressed='true'] { color: var(--gold-light); background: var(--panel-top); border-color: var(--gold); }
+.room-form, .room-invite, .room-seats { max-width: 490px; }
+.room-form { display: grid; gap: 15px; }
+.room-form label, .room-invite label { display: grid; gap: 5px; }
+.room-form input:not([type='radio']), .room-invite input {
+  min-width: 0;
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--panel-top);
+  color: var(--paper);
+  padding: 8px 11px;
+}
+.room-form input::placeholder { color: var(--muted); opacity: 1; }
+.room-form > button { justify-self: start; }
+.room-size { margin: 0; padding: 0; min-width: 0; border: 0; }
+.room-size > div { display: flex; gap: 8px; }
+.room-size legend { padding: 0 0 5px; }
+.room-size label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 11px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--panel-top);
+  cursor: pointer;
+}
+.room-size label:has(:checked) { border-color: var(--brass-line); color: var(--gold-light); }
+.room-size input { margin: 0; accent-color: var(--gold); }
+.room-notice, .room-error { color: var(--muted); margin-top: 12px; }
+.room-error { color: var(--warn); }
+.room-resume { margin-top: 7px; }
+.room-lobby-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 7px 14px; }
+.room-lobby-heading span, .room-lobby-code { color: var(--muted); }
+.room-lobby-code { margin-block: 10px 16px; }
+.room-lobby-code strong { margin-inline-start: 6px; color: var(--gold-light); letter-spacing: .13em; font-variant-numeric: tabular-nums; }
+.room-invite > div { display: flex; gap: 8px; margin-top: 5px; }
+.room-invite button { flex: none; }
+.room-invite p { margin-top: 5px; color: var(--good); }
+.room-seats { list-style: none; padding: 0; margin-block: 19px; border-block: 1px solid var(--line); }
+.room-seats li { display: grid; grid-template-columns: 2.5em minmax(0, 1fr) auto; gap: 8px; align-items: center; min-height: 43px; }
+.room-seats li + li { border-top: 1px solid var(--line); }
+.room-seats li span { color: var(--muted); }
+.room-seats li[data-filled='false'] strong { color: var(--muted); font-weight: 400; }
+.room-seats li strong { overflow-wrap: anywhere; }
+.room-lobby-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 17px; }
+
+.room-felt { padding: 16px 20px 17px; }
+.room-opponents {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.room-opponents:has(li:only-child) { grid-template-columns: minmax(0, 270px); justify-content: center; }
+.room-opponents li {
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-top);
+}
+.room-opponents li[data-turn='true'] { border-color: var(--gold); }
+.room-opponent-name, .room-other-card { display: flex; justify-content: space-between; gap: 4px 8px; flex-wrap: wrap; }
+.room-opponent-name { margin-bottom: 4px; }
+.room-opponent-name strong { color: var(--gold-light); overflow-wrap: anywhere; }
+.room-opponent-name span, .room-other-card span, .room-seat-status { color: var(--muted); }
+.room-other-card, .room-seat-status { font-size: 12px; }
+.room-other-card b { font-weight: 500; }
+.room-pot, .room-balance, .room-cards { display: flex; justify-content: center; align-items: center; }
+.room-pot { margin-block: 12px 8px; gap: 6px; color: var(--gold-light); }
+.room-pot strong, .room-balance b { font-variant-numeric: tabular-nums; }
+.room-pot strong { font: 600 26px/1.1 var(--serif); }
+.room-cards { gap: 13px; align-items: start; }
+.room-balance { flex-wrap: wrap; margin-top: 6px; gap: 2px 12px; color: var(--gold-light); }
+.room-balance strong { overflow-wrap: anywhere; }
+.room-clock { color: var(--gold-light); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.room-actions .turn-status { flex-wrap: wrap; min-width: 0; overflow-wrap: anywhere; }
+.room-swap { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 11px; margin-top: 8px; }
+.room-awards { margin-block: 6px 9px; color: var(--gold-light); overflow-wrap: anywhere; }
+.room-table-links { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 5px; }
+.room-side-tabs { grid-template-columns: repeat(3, 1fr); }
+.room-clue-detail { margin-top: 12px; }
+.room-evidence-list { margin-top: 12px; }
+.room-evidence-list > div, .room-ranking li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding: 5px 0;
+}
+.room-evidence-list dd { color: var(--muted); text-align: right; }
+.room-history summary strong { min-width: 0; overflow-wrap: anywhere; }
+.room-ranking { padding: 0; margin-block: 16px 0; list-style: none; }
+.room-ranking li { min-height: 38px; align-items: center; overflow-wrap: anywhere; }
+.room-ranking b { flex: none; color: var(--gold-light); }
+
+@media (max-width: 540px) {
+  .room-launch { padding-inline: 13px; }
+  .room-felt { padding: 12px 10px 13px; }
+  .room-opponents { gap: 5px; }
+  .room-opponents li { padding: 5px 6px; }
+  .room-opponent-name { gap: 0 3px; font-size: 12px; }
+  .room-other-card { display: block; }
+  .room-other-card > :first-child { margin-inline-end: 3px; }
+  .room-pot { margin-block: 8px; }
+  .room-cards { gap: 7px; }
+  .room-lobby .room-invite button { padding-inline: 8px; }
+}
+
+@media (max-width: 360px) {
+  .room-entry { padding: 17px; }
+  .room-layout .table-round { gap: 5px; }
+  .room-layout .table-heading > span { max-width: 8em; text-align: right; }
+  .room-opponents li { padding: 5px; }
+}

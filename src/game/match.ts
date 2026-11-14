@@ -19,7 +19,7 @@ export type Match = {
   challengeUsed: [boolean, boolean]; inspectUsed: boolean;
   holeSwap: { hand: number; replacement: Card } | null;
 };
-export const unit = (s: Match) => s.hand < 4 ? 1 : 2;
+export const unit = (s: Pick<Match, 'hand'>) => s.hand < 4 ? 1 : 2;
 export const token = (s: Match) => `${s.seed}:${s.hand}:${s.phase}:${s.moves.length}:${s.holeSwap?.hand ?? '-'}`;
 
 export function currentHand(s: Match): Hand {

@@ -45,6 +45,21 @@ export function RuleComparison({ clue, seats, rules }: { clue: Clue; seats: Seat
   </table>;
 }
 
+export function OpeningExample({ clue }: { clue: Clue }) {
+  return <section id="opening-example" aria-label="开局牌例" tabIndex={-1}>
+    <div className="clue-public"><span>公共牌</span><strong>{clue.publicCard.name}</strong><span>{digitsOf(clue.publicCard).join(' · ')}</span></div>
+    {([clue.a, clue.b] as const).map((cards, seat) => (
+      <div className="example-side" key={seat}>
+        <div className="example-seat">
+          <span>{EXAMPLE_SEATS[seat]}</span>
+          {clue.winner === seat && <strong>胜</strong>}
+        </div>
+        <div className="example-cards">{cards.map(c => <PlayingCard key={c.id} value={c} small />)}</div>
+      </div>
+    ))}
+  </section>;
+}
+
 function Evidence({ evidence, opening }: { evidence: EvidenceHint; opening: Clue }) {
   const { clue, source } = evidence;
   const seats = source === 'example' ? EXAMPLE_SEATS : TABLE_SEATS;
@@ -122,17 +137,6 @@ export function CluePanel({ clue, used, evidence, finished, onHint, onReturn }: 
       </div>}
     </section>
 
-    <section id="opening-example" aria-label="开局牌例" tabIndex={-1}>
-      <div className="clue-public"><span>公共牌</span><strong>{clue.publicCard.name}</strong><span>{digitsOf(clue.publicCard).join(' · ')}</span></div>
-      {([clue.a, clue.b] as const).map((cards, seat) => (
-        <div className="example-side" key={seat}>
-          <div className="example-seat">
-            <span>{EXAMPLE_SEATS[seat]}</span>
-            {clue.winner === seat && <strong>胜</strong>}
-          </div>
-          <div className="example-cards">{cards.map(c => <PlayingCard key={c.id} value={c} small />)}</div>
-        </div>
-      ))}
-    </section>
+    <OpeningExample clue={clue} />
   </div>;
 }

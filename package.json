@@ -1,6 +1,6 @@
 {
   "name": "shuowangyue",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -9,8 +9,11 @@
     "build": "tsc -b && vite build && node scripts/package-offline.mjs",
     "release": "npm run build && node scripts/package-release.mjs",
     "preview": "vite preview --host 127.0.0.1",
+    "build:rooms": "node scripts/build-rooms.mjs",
+    "start:rooms": "npm run build:rooms && node server/serve.mjs",
     "test": "vitest run tests",
     "test:e2e": "playwright test",
+    "test:rooms": "playwright test --config playwright.rooms.config.mjs",
     "playtest:baseline": "node scripts/playtest-baseline.mjs"
   },
   "dependencies": { "react": "^19.2.0", "react-dom": "^19.2.0" },
